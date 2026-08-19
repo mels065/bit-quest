@@ -57,7 +57,7 @@ public abstract class Actor {
             damage = new Random().nextInt(1);
         }
 
-        target.alterHp(damage);
+        target.alterHp(-damage);
     }
 
     public boolean isCriticalCond() {
