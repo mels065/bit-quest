@@ -8,18 +8,29 @@ enum ActorCondition {
     DEAD
 };
 
+record Stats(
+    int maxHp,
+    int atk,
+    int def,
+    int speed
+) {};
+
 public abstract class Actor {
+    private String name;
     private int maxHP;
     private int hp;
     private int atk;
     private int def;
+    private int speed;
     private ActorCondition cond;
 
-    public Actor(int mh, int a, int d) {
-        maxHP = mh;
-        hp = mh;
-        atk = a;
-        def = d;
+    public Actor(String n, Stats stats) {
+        name = n;
+        maxHP = stats.maxHp();
+        hp = maxHP;
+        atk = stats.atk();
+        def = stats.def();
+        speed = stats.speed();
         cond = ActorCondition.NORMAL;
     }
 
@@ -37,6 +48,10 @@ public abstract class Actor {
 
     public int getDef() {
         return def;
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     public int alterHp(int mod) {
