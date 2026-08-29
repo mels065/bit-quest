@@ -1,4 +1,4 @@
-package actors;
+package main.java.actors;
 
 import java.util.Random;
 
@@ -8,14 +8,8 @@ enum ActorCondition {
     DEAD
 };
 
-record Stats(
-    int maxHp,
-    int atk,
-    int def,
-    int speed
-) {};
-
-public abstract class Actor {
+// `Target` is the type of target the actor is allowed to attack
+public abstract class Actor<Target extends Actor<?>> {
     private String name;
     private int maxHP;
     private int hp;
@@ -32,6 +26,10 @@ public abstract class Actor {
         def = stats.def();
         speed = stats.speed();
         cond = ActorCondition.NORMAL;
+    }
+
+    public String getString() {
+        return name;
     }
 
     public int getMaxHP() {
@@ -66,15 +64,6 @@ public abstract class Actor {
         return hp;
     }
 
-    public void attack(Actor target) {
-        int damage = atk - (target.def / 2);
-        if (damage <= 0) {
-            damage = new Random().nextInt(1);
-        }
-
-        target.alterHp(-damage);
-    }
-
     public boolean isCriticalCond() {
         return cond == ActorCondition.CRITICAL;
     }
@@ -84,7 +73,7 @@ public abstract class Actor {
     }
 
     private void updateCondition() {
-        float ratio = hp / maxHP;
+        float ratio = (float) hp / maxHP;
 
         if (ratio >= 0.2) {
             cond = ActorCondition.NORMAL;
@@ -93,5 +82,14 @@ public abstract class Actor {
         } else {
             cond = ActorCondition.DEAD;
         }
+    }
+
+    public void attack(Target target) {
+        int damage = atk - (target.getDef() / 2);
+        if (damage <= 0) {
+            damage = new Random().nextInt(1);
+        }
+
+        target.alterHp(-damage);
     }
 }
